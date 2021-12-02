@@ -1,8 +1,7 @@
 #!/usr/bin/env bb
 (require '[clojure.string :as str])
 
-;; ./day_02.clj < ./input/day_02.txt
-(def input (str/split-lines (slurp *in*)))
+(def input (str/split-lines (slurp "./input/day_02.txt")))
 
 ;; ------------------------------------ part 1
 
