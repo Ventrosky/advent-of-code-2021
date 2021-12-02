@@ -5,17 +5,16 @@
 
 ;; ------------------------------------ part 1
 
-(defn forward
-  [position value]
-  (assoc position :horizontal (+ (:horizontal position) value)))
+(defn pos-updater
+  [key fu]
+  (fn [position value]
+    (assoc position key (fu (key position) value))))
 
-(defn down
-  [position value]
-  (assoc position :depth (+ (:depth position) value)))
+(def forward (pos-updater :horizontal +))
 
-(defn up
-  [position value]
-  (assoc position :depth (- (:depth position) value)))
+(def down (pos-updater :depth +))
+
+(def up (pos-updater :depth -))
 
 (defn move
  [input]
@@ -28,22 +27,21 @@
                         input)]
    (* (:depth computed) (:horizontal computed))))
 
-(println "sol 1" (move input))
+(println "sol 1:" (move input))
 
 ;; ------------------------------------ part 2
 
+#_{:clj-kondo/ignore [:redefined-var]}
 (defn forward
   [position value]
   (assoc position
          :horizontal (+ (:horizontal position) value) 
          :depth (+ (* value (:aim position)) (:depth position))))
 
-(defn down
-  [position value]
-  (assoc position :aim (+ (:aim position) value)))
+#_{:clj-kondo/ignore [:redefined-var]}
+(def down (pos-updater :aim +))
 
-(defn up
-  [position value]
-  (assoc position :aim (- (:aim position) value)))
+#_{:clj-kondo/ignore [:redefined-var]}
+(def up (pos-updater :aim -))
 
-(println  "sol 2" (move input))
+(println  "sol 2:" (move input))

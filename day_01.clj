@@ -17,18 +17,12 @@
           {:last nil :inc 0}
           input)))
 
-(println "sol 1" (increments input))
+(println "sol 1:" (increments input))
 
 ;; ------------------------------------ part 2
 
-(defn increments
+(defn sliding-window
   [input]
-  (:inc (reduce #(assoc (if (and (not-nil? (:last %1)) (< (:last %1) %2))
-                    (update %1 :inc inc)
-                    %1)
-                  :last
-                  %2)
-          {:last nil :inc 0}
-          (map #(reduce + %1) (partition 3 1 input)))))
+  (map #(reduce + %1) (partition 3 1 input)))
 
-(println "sol 2" (increments input))
+(println "sol 2:" (increments (sliding-window input)))
