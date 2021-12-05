@@ -12,7 +12,11 @@
 
 (def board-input (drop 1 input))
 
-(def size (count (str/split (str/trim (second board-input)) #"\s+")))
+(defn tokenize
+  [s]
+  (str/split (str/trim s) #"\s+"))
+
+(def size (count (tokenize (second board-input))))
 
 (def not-empty? (complement empty?))
 
@@ -23,11 +27,9 @@
 (defn next-board
   [board-input]
   (let [board (take-while not-empty? board-input)
-        score-row (counter size)
-        score-col (counter size)
         remains (drop (inc size) board-input)
-        split-row #(reduce-kv (fn [acc k v] (assoc acc (str->int v) {:col k :row %1})) {} (str/split (str/trim %2) #"\s+"))]
-    (list (into {:score {:row score-row :col score-col}} (map-indexed split-row board)) remains)))
+        split-row #(reduce-kv (fn [acc k v] (assoc acc (str->int v) {:col k :row %1})) {} (tokenize %2))]
+    (list (into {:score {:row (counter size) :col (counter size)}} (map-indexed split-row board)) remains)))
 
 (defn split-boards 
   [[_ & lines]]
@@ -69,13 +71,12 @@
   [numbers board-input]
   (loop [numbers numbers
          state (split-boards board-input)
-         prev 0
          scores []]
     (if (empty? numbers)
       scores
       (let [[x & numbers] numbers
             state (map #(update-board % x) state)]
-        (recur numbers (filter is-game? state) x (into scores (map #(score % x) (filter is-end? state))) )))))
+        (recur numbers (filter is-game? state) (into scores (map #(score % x) (filter is-end? state))) )))))
 
 (def board-scores (run-numbers draw-numbers board-input))
 
