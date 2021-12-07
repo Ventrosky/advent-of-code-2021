@@ -53,7 +53,7 @@
 (defn is-end?
   [board]
   (let [{r :row c :col} (:score board)
-        filled? (fn [r] (some #(if (= size %) board) (vals r)))]
+        filled? (fn [r] (some #(when (= size %) board) (vals r)))]
      (or (filled? r) (filled? c))))
 
 (def is-game?
@@ -76,7 +76,7 @@
       scores
       (let [[x & numbers] numbers
             state (map #(update-board % x) state)]
-        (recur numbers (filter is-game? state) (into scores (map #(score % x) (filter is-end? state))) )))))
+        (recur numbers (filter is-game? state) (into scores (map #(score % x) (filter is-end? state))))))))
 
 (def board-scores (run-numbers draw-numbers board-input))
 
